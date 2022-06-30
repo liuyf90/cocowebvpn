@@ -2,7 +2,7 @@
 --  Email:liuyf90@gmail.com
 --  Time:Jun 27, 2022 at 15:30
 
-local _M={} -- 使⽤ table 模拟类
+local _M={} -- use table mock an class 
 
 function _M.connect()
     local mysql = require "resty.mysql"

@@ -6,8 +6,6 @@
 
 local ngx_say = ngx.say
 local get_subdomain= require "get_subdomain"
-local get_urls = require "get_urls"
---get_urls.set_dict()
 
 
 function connect()
@@ -64,7 +62,7 @@ local function set_ips(db)
     return res
 end
 
-
+-- First judge sharedict that doesn't contain this data,and then query the mysql data
 local ips = ngx.shared.ips
 local domain_name = ngx.ctx.domain
 ngx_say("domain_name = " .. domain_name)
@@ -72,6 +70,7 @@ local dest_ip = ips:get("test1.china.com")
 if not dest_ip then
     local db = connect()
     local res = set_ips(db)
+    dest_ip = ips:get("test1.china.com")
 end
 
 ngx_say("dest_ip = " .. dest_ip)

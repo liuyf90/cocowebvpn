@@ -12,7 +12,7 @@ function connect()
     local mysql = require "resty.mysql"
     local db, err = mysql:new()
     if not db then
-        ngx_say("failed to instantiate mysql: ", err)
+        --ngx_say("failed to instantiate mysql: ", err)
         return nil,err
     end
 
@@ -29,10 +29,10 @@ function connect()
          max_packet_size = 1024 * 1024,
      }
      if not ok then
-         ngx_say("failed to connect: ", err, ": ", errcode, " ", sqlstate)
+         --ngx_say("failed to connect: ", err, ": ", errcode, " ", sqlstate)
          return
      end
-     ngx_say("connected to mysql.")
+     --ngx_say("connected to mysql.")
      
      return db 
 end
@@ -58,14 +58,14 @@ local function set_ips(db)
         ips:set(res[k].server_name,res[k].dest_ip);
     end
     
-    ngx_say("result: ", cjson.encode(res))
+    --ngx_say("result: ", cjson.encode(res))
     return res
 end
 
 -- First judge sharedict that doesn't contain this data,and then query the mysql data
 local ips = ngx.shared.ips
 local domain_name = ngx.ctx.domain
-ngx_say("domain_name = " .. domain_name)
+--ngx_say("domain_name = " .. domain_name)
 local dest_ip = ips:get("test1.china.com")
 if not dest_ip then
     local db = connect()
@@ -73,4 +73,40 @@ if not dest_ip then
     dest_ip = ips:get("test1.china.com")
 end
 
-ngx_say("dest_ip = " .. dest_ip)
+
+ngx.var.proxy =  dest_ip
+--ngx_say("dest_ip = " .. dest_ip)
+
+
+--ngx.status = ngx.HTTP_MOVED_TEMPORARILY
+--local ngx_resp = require "ngx.resp"
+--ngx_resp.add_header("Location", "http://" .. dest_ip)
+--ngx_say("dest_ip= " .. dest_ip)
+--return ngx.var.jumpip=dest_ip
+--return ngx.redirect("http://" .. dest_ip)
+
+
+
+
+--ngx.req.read_body()
+--local args, err = ngx.req.get_uri_args()
+--local http = require "resty.http"   -- ①
+--local httpc = http.new()
+--local res, err = httpc:request_uri( -- ②
+--"http://" .. dest_ip,
+--{
+--    method = "GET"
+--}
+--)
+--if not res then
+--    ngx.log(ngx.ERR, "request failed: ", err)
+--    return
+--end
+---- At this point, the entire request / response is complete and the connection
+---- will be closed or back on the connection pool.
+--
+---- The `res` table contains the expeected `status`, `headers` and `body` fields.
+--local status = res.status
+--local length = res.headers["Content-Length"]
+--local body   = res.body
+

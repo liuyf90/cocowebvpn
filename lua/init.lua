@@ -17,7 +17,7 @@ local ips = ngx.shared.ips
 
 local function update_ips()
     local red = redis:new()
-    local ok, err = red:connect("127.0.0.1",7000)   
+    local ok, err = red:connect("127.0.0.1",6379)   
     if err then
         ngx.log(ngx.ERR, "redis connect error: "..err)
         return
@@ -28,9 +28,10 @@ local function update_ips()
         return
     end
     ips:flush_all()
-    for _, k in paris(res) do
+    for _, k in pairs(res) do
         ips:set(k,true)
     end
+    ngx.timer.at(5, update_ips)
 end
 
 --ever 5 sec to flush datas in sharedict

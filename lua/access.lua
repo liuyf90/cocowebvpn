@@ -6,17 +6,9 @@
 --]]
 
 
-local black_list = {
-    ["192.168.1.101"] = true,
-    ["192.168.1.102"] = true,
-    ["192.168.1.103"] = true,
-    ["192.168.1.104"] = true,
-    --["127.0.0.1"] = true,
-}
-
+local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
-
-if black_list[ip] then
+if ips:get(ip) then
     return ngx.exit(ngx.HTTP_FORBIDDEN)
 end
 

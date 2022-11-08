@@ -9,6 +9,10 @@
 local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
 if ips:get(ip) then
-    return ngx.exit(ngx.HTTP_FORBIDDEN)
+    --return ngx.redirect("http://www.google.com")
+--    ngx.req.set_header("Host", "http://www.google.com")
+    --return ngx.exit(ngx.HTTP_FORBIDDEN)
+    local url = 'http://www.sohu.com'
+    ngx.var.target = url
 end
 

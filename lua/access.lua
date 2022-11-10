@@ -8,11 +8,22 @@
 
 local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
+local function proxy_to()
+    local res = ngx.location.capture("/download_server",
+             { share_all_vars = true });
+    if res.status ~= ngx.HTTP_OK then
+    ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
+        ngx.say('Failed to process, please try again in some minutes.')
+        ngx.exit(403);
+    end
+    ngx.print(res.body)
+end
+
+
+-- this is target ip or domainName ,proxy these in here 
 if ips:get(ip) then
-    --return ngx.redirect("http://www.google.com")
---    ngx.req.set_header("Host", "http://www.google.com")
-    --return ngx.exit(ngx.HTTP_FORBIDDEN)
-    local url = 'http://www.sohu.com'
-    ngx.var.target = url
+    ngx.var.proxy = "127.0.0.1:7777"--..ngx.var.uri
+    ngx.log(ngx.INFO, "access-proxy-ip: "..ngx.var.proxy)
+    proxy_to()
 end
 

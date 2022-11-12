@@ -5,6 +5,9 @@
     replace the content of the resp body  returned by the sub-request
 --]]
 
+
+local resp = require "lua.lib.resp"
+
 ngx.log(ngx.INFO,"replace resp body :")
 -- body_filter_by_lua, body filter模块，ngx.arg[1]代表输入的chunk，ngx.arg[2]代表当前chunk是否为last
 local chunk, eof = ngx.arg[1], ngx.arg[2]
@@ -23,17 +26,8 @@ end
 if eof then
     -- 获取所有响应数据
     local whole = table.concat(ngx.ctx.buffered)
-    ngx.ctx.buffered = nil
-
-    -- 进行你所需要进行的处理
-    -- try to unzip
-    -- local status, debody = pcall(com.decode, whole) 
-    -- if status then whole = debody end
-    -- try to add or replace response body
-    -- local js_code = ...
-    -- whole = whole .. js_code
-    --whole = string.gsub(whole, "max%-width%:1632px%;",  "")
-
+    -- 进行改写
+    whole= resp.rewrite_whole(whole) 
     -- 重新赋值响应数据，以修改后的内容作为最终响应
     ngx.arg[1] = whole
 end

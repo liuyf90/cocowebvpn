@@ -8,14 +8,24 @@
 
 local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
-local function proxy_to(url)
-     ngx.var.proxy = url --..ngx.var.uri
-end
 
+--invaild: ngx.loacation.capture method is unuseful in here
+local function proxy_to()
+    local res = ngx.location.capture("/download_server",
+             { copy_all_vars = true,always_forward_body = true })
+    ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
+  --  if res.status ~= ngx.HTTP_OK then
+  --
+  --      ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
+  --      ngx.say('Failed to process, please try again in some minutes.')
+  --      ngx.exit(403)
+  --  end
+   ngx.say(res.body)
+end
 
 -- this is target ip or domainName ,proxy these in here 
 if ips:get(ip) then
-    proxy_to("101.201.239.162:88/sz/")
+    proxy_to()
     ngx.log(ngx.INFO, "access-proxy-ip: "..ngx.var.proxy)
     ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest
     local req = require "lua.lib.req"
@@ -26,14 +36,3 @@ end
 
 
 
---invaild: ngx.loacation.capture method is unuseful in here
---local function proxy_to()
---    local res = ngx.location.capture("/download_server",
---             { copy_all_vars = true,always_forward_body = true })
---    if res.status ~= ngx.HTTP_OK then
---    ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
---        ngx.say('Failed to process, please try again in some minutes.')
---        ngx.exit(403)
---    end
---   ngx.say(res.body)
---end

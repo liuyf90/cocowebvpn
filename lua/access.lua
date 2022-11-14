@@ -8,10 +8,11 @@
 
 local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
-
+local url = "/download_server"..ngx.var.request_uri
+ngx.log(ngx.INFO,"****url****="..url)
 --invaild: ngx.loacation.capture method is unuseful in here
 local function proxy_to()
-    local res = ngx.location.capture("/download_server",
+    local res = ngx.location.capture(url,
              { copy_all_vars = true,always_forward_body = true })
     ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
   --  if res.status ~= ngx.HTTP_OK then

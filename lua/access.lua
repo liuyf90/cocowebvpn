@@ -10,17 +10,20 @@ local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
 local url = "/download_server"..ngx.var.request_uri
 ngx.log(ngx.INFO,"****url****="..url)
---invaild: ngx.loacation.capture method is unuseful in here
+
 local function proxy_to()
     local res = ngx.location.capture(url,
              { copy_all_vars = true,always_forward_body = true })
     ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
-  --  if res.status ~= ngx.HTTP_OK then
-  --
-  --      ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
-  --      ngx.say('Failed to process, please try again in some minutes.')
-  --      ngx.exit(403)
-  --  end
+    for k, v in pairs(res.header) do
+           ngx.header[k] = v
+    end
+    --if res.status ~= ngx.HTTP_OK then
+  
+    --    ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
+    --    ngx.say('Failed to process, please try again in some minutes.')
+    --    ngx.exit(403)
+    --end
    ngx.say(res.body)
 end
 

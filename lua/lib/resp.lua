@@ -17,7 +17,17 @@ function _M.isTextHtml(head_type)
 	if htmlTypeFind ~= nil or jsTypeFind ~= nil or cssTypeFind ~= nil or xjsTypeFind ~= nil then
 		return true
 	end
+    
 	return false
+end
+
+
+function _M.get_resp_headers()
+    local h, err = ngx.req.get_headers()
+    if err == "truncated" then
+        -- one can choose to ignore or reject the current request here
+    end
+    return h
 end
 
 function _M.rewrite_whole(whole)

@@ -1,9 +1,13 @@
+--[[
+    @author liuyf
+    Time:Nov 13, 2022 at 10:25
 
+    Request related tools are packaged here
+--]]
 
 local _M={_VERSION = '0.12'}
 function _M.print_req_headers()
     local h, err = ngx.req.get_headers()
-
     if err == "truncated" then
         -- one can choose to ignore or reject the current request here
     end

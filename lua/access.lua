@@ -40,6 +40,7 @@ end
 
 -- this is target ip or domainName ,proxy these in here 
 if ips:get(ip) then
+    ngx.var.proxy = '218.9.68.192:8093'
     proxy_to()
     ngx.log(ngx.INFO, "access-proxy-ip: "..ngx.var.proxy)
     ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest

@@ -12,18 +12,29 @@ local url = "/download_server"..ngx.var.request_uri
 ngx.log(ngx.INFO,"****url****="..url)
 
 local function proxy_to()
+    local method = nil 
+    if ngx.req.get_method() == "GET" then
+       method = ngx.HTTP_GET 
+    end
+    if ngx.req.get_method() == "POST" then
+       method = ngx.HTTP_POST
+    end
+
+    ngx.log(ngx.INFO,"*****location capture method is *******"..tostring(method))
+
     local res = ngx.location.capture(url,
-             { copy_all_vars = true,always_forward_body = true })
+             {method = mehtod, copy_all_vars = true,always_forward_body = true })
     ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
+    --set sub restquest header
     for k, v in pairs(res.header) do
            ngx.header[k] = v
     end
-    --if res.status ~= ngx.HTTP_OK then
-  
-    --    ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
-    --    ngx.say('Failed to process, please try again in some minutes.')
-    --    ngx.exit(403)
-    --end
+--    if res.status ~= ngx.HTTP_OK then
+--  
+--        ngx.log(ngx.INFO, "get sub_rquest res.status:"..res.status)
+--        ngx.say('Failed to process, please try again in some minutes.')
+--        ngx.exit(403)
+--    end
    ngx.say(res.body)
 end
 

@@ -12,7 +12,7 @@ local url = "/download_server"..ngx.var.request_uri
 local my_scheme='http'
 local my_host='proxy.com:8888'
 local ziel= my_scheme.."://"..my_host
-ngx.log(ngx.INFO,"****url****="..url)
+--ngx.log(ngx.INFO,"****url****="..url)
 
 local function proxy_to()
     local map = {
@@ -21,7 +21,7 @@ local function proxy_to()
     }
     local res = ngx.location.capture('/redirect_checker',
     {method = map[ngx.var.request_method], body = ngx.var.request_body})
-    ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
+    --ngx.log(ngx.INFO,"localtion.capture status: "..res.status)
     --set sub restquest header
     for k, v in pairs(res.header) do
         ngx.header[k] = v
@@ -48,11 +48,11 @@ end
 -- this is target ip or domainName ,proxy these in here 
 if ips:get(ip) then
     ngx.var.proxy = '218.9.68.192:8093'
-    ngx.log(ngx.INFO, "access-proxy-ip: "..ngx.var.proxy)
+    --ngx.log(ngx.INFO, "access-proxy-ip: "..ngx.var.proxy)
     ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest
     local req = require "lua.lib.req"
-    req.print_req_headers()
-    req.set_req_body_data()
+    --req.print_req_headers()
+    --req.set_req_body_data()
     proxy_to()
 
 end

@@ -10,12 +10,15 @@ local ips = ngx.shared.ips
 local ip = ngx.var.remote_addr
 
 
+local function proxy_to()
+    ngx.exec('@download_server')    
+    return ngx.exit(ngx.HTTP_OK)
+end
 -- this is target ip or domainName ,proxy these in here 
 if ips:get(ip) then
     ngx.var.proxy = '218.9.68.192:8093'
     ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest
-    local req = require "lua.lib.req"
-    req.print_req_headers()
+    proxy_to()
 end
 
 

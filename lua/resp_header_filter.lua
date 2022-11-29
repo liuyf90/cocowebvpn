@@ -2,7 +2,8 @@
     @author liuyf
     Time:Nov 25, 2022 at 11:17
 
-    repalce resp header
+    repalce resp header in here
+    Rewrite location header when status is 3xx and location header is present
 --]]
 
 

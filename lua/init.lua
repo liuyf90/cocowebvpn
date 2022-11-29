@@ -22,14 +22,15 @@ local function update_ips()
         ngx.log(ngx.ERR, "redis connect error: "..err)
         return
     end
-    local res,err = red:smembers("ips")
+    local res,err = red:smembers("ips:url")
     if err then
         ngx.log(ngx.ERR, "redis read smembers error: " ..err)
         return
     end
     ips:flush_all()
+    local cjson = require "cjson"
     for _, k in pairs(res) do
-        ips:set(k,true)
+        ips:set(cjson.encode(k),true)
     end
     ngx.timer.at(5, update_ips)
 end

@@ -18,5 +18,11 @@ function _M.print_req_headers()
     end
 end
 
+-- set req headers in here
+function _M.set_req_headers()
+    --set resquest header
+    ngx.header.Expires= -1 
+end
+
 
 return _M

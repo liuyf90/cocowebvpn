@@ -13,13 +13,16 @@ local web="my.webvpn.com"
 
 
 local function proxy_to()
+    local req = require "lua.lib.req"
+    req.set_req_headers()
     ngx.exec('@download_server')    
-    return ngx.exit(ngx.HTTP_OK)
+--    return ngx.exit(ngx.HTTP_OK)
+    return ngx.exit(ngx.status)
 end
 
 
 local keys = ips:get_keys(0)
-ngx.log(ngx.ALERT,"*****keys="..table.concat(keys))
+--ngx.log(ngx.ALERT,"*****keys="..table.concat(keys))
 
 local cjson = require "cjson"
 ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest
@@ -28,10 +31,12 @@ ngx.req.read_body() --will be directly forwarded to the subrequest without copyi
 for _,v in ipairs(keys) do
     local json = cjson.decode(v)
     local sub_json=cjson.decode(json)
-    local t = sub_json["my.webvpn.com"] 
+    local t = sub_json["oa.webvpn.com"] 
     if t then
-         ngx.log(ngx.ALERT,"*****key="..t.url)
-         ngx.var.proxy = t.url..':'..t.port  
+         --ngx.var.proxy = t.url..':'..t.port  
+--         ngx.var.proxy = t.web
+ --        ngx.log(ngx.ALERT,"*****$proxy="..t.web)
+         ngx.var.proxy = 'oa.hrbfu.edu.cn'
          proxy_to()
     end
 end

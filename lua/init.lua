@@ -17,9 +17,14 @@ local ips = ngx.shared.ips
 
 local function update_ips()
     local red = redis:new()
-    local ok, err = red:connect("127.0.0.1",6379)   
+    local ok, err = red:connect("127.0.0.1",10199)   
     if err then
         ngx.log(ngx.ERR, "redis connect error: "..err)
+        return
+    end
+    local res, err = red:auth("mypass")
+    if not res then
+        ngx.say("failed to authenticate: ", err)
         return
     end
     local res,err = red:smembers("ips:url")

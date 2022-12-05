@@ -8,6 +8,7 @@
 local _M = {} 
 local data = { 
     casport = 7777, 
+    domainName = 'proxyman.com:8888',
 } 
 function _M.get(name) 
   return data[name] 

@@ -16,7 +16,8 @@ ngx.log(ngx.ALERT,'ngx.status='..ngx.status)
 if redirect_target and ngx.status > 300 and ngx.status <309 then
     ngx.log(ngx.ALERT,'location='..redirect_target)
     ngx.log(ngx.ALERT,'redirect_target:'..redirect_target)
-    local redirect_target_changed,n,err=ngx.re.gsub(redirect_target, '(^http?[:][/][/][^/]+)', 'http://proxyman.com:8888')
+    local data = require "lua.init_data"
+    local redirect_target_changed,n,err=ngx.re.gsub(redirect_target, '^(https?)[:][/][/][^/]+', '$1://'..data.get("domainName"))
     ngx.log(ngx.ALERT, 'redirect_target_changed: '..redirect_target_changed)
     --return ngx.redirect(redirect_target_changed, ngx.status)
     ngx.header.Location = redirect_target_changed

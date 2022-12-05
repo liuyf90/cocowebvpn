@@ -16,7 +16,6 @@ local function proxy_to()
     local req = require "lua.lib.req"
     req.set_req_headers()
     ngx.exec('@download_server')    
---    return ngx.exit(ngx.HTTP_OK)
     return ngx.exit(ngx.status)
 end
 
@@ -36,6 +35,7 @@ for _,v in ipairs(keys) do
     --ngx.log(ngx.ALERT,"*****$proxy="..t.web)
     if t then
            --ngx.var.proxy = 'oa.hrbfu.edu.cn'
+           --proxy_to()
            --capture domainName form t.web
            local captures, err =ngx.re.match(t.web,"[^/]+","jo")
            if captures then
@@ -48,7 +48,6 @@ for _,v in ipairs(keys) do
                    ngx.log(ngx.ERR, "error: ", err)
                    return
                end
-             return 
            end           
     end
 end

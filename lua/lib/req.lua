@@ -21,7 +21,7 @@ end
 -- set req headers in here
 function _M.set_req_headers()
     --set resquest header
-    ngx.header.Expires= -1 
+    --ngx.header.Expires= -1 
 end
 
 

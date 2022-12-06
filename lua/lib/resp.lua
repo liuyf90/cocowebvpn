@@ -28,9 +28,9 @@ function _M.get_resp_headers_Location()
         -- one can choose to ignore or reject the current request here
     end
     local location = h["Location"]
-    for k,v in pairs(h) do
-        ngx.log(ngx.INFO,'***resp_headers***='..' key: '..k..'value: '..require"cjson".encode(v))
-    end
+   -- for k,v in pairs(h) do
+   --     ngx.log(ngx.INFO,'***resp_headers***='..' key: '..k..'value: '..require"cjson".encode(v))
+   -- end
     if location ~= nil then
      ngx.log(ngx.ALERT, 'resp_location='..location)
      return location

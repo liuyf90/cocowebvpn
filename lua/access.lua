@@ -27,16 +27,15 @@ local keys = ips:get_keys(0)
 local cjson = require "cjson"
 ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest
 
--- get sub_domain_name
+-- get sub_domain_name automatically
 local domain = require "lua.lib.domain"
 local subdomain = domain.get_sub_domain()
 
 
--- sub_json's  data like "sadd ips:url '{"oa.webvpn.com":{"url":"10.49.2.5","port":"8080","web":"oa.web.com"}}'"
+-- sub_json's  data like "sadd ips:url '{"oa":{"url":"10.49.2.5","port":"8080","web":"oa.web.com"}}'"
 for _,v in ipairs(keys) do
     local json = cjson.decode(v)
     local sub_json=cjson.decode(json)
---    local t = sub_json["oa"] 
     local t = sub_json[subdomain]
     --ngx.log(ngx.ALERT,"*****$sub_json:"..type(sub_json))
     --ngx.log(ngx.ALERT,"*****$proxy="..t.web)
@@ -47,7 +46,7 @@ for _,v in ipairs(keys) do
            local captures, err =ngx.re.match(t.web,"[^/]+","jo")
            if captures then
                local domainName= captures[0]
-               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
+--               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
                ngx.var.proxy = domainName
                proxy_to()
            else

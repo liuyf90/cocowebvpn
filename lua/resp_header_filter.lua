@@ -12,12 +12,17 @@ require"cjson".encode(ngx.resp.get_headers())
 local resp = require "lua.lib.resp"
 --get 3xx location uri
 local redirect_target=resp.get_resp_headers_Location()                    
+local domain =require "lua.lib.domain"
+local subdomain = domain.get_sub_domain()..'.'
+ngx.log(ngx.ALERT,'subdomain='..subdomain)
+
+
 ngx.log(ngx.ALERT,'ngx.status='..ngx.status)
 if redirect_target and ngx.status > 300 and ngx.status <309 then
     ngx.log(ngx.ALERT,'location='..redirect_target)
     ngx.log(ngx.ALERT,'redirect_target:'..redirect_target)
     local data = require "lua.init_data"
-    local redirect_target_changed,n,err=ngx.re.gsub(redirect_target, '^(https?)[:][/][/][^/]+', '$1://'..data.get("domainName"))
+    local redirect_target_changed,n,err=ngx.re.gsub(redirect_target, '^(https?)[:][/][/][^/]+', '$1://'..subdomain..data.get("domainName"))
     ngx.log(ngx.ALERT, 'redirect_target_changed: '..redirect_target_changed)
     --return ngx.redirect(redirect_target_changed, ngx.status)
     ngx.header.Location = redirect_target_changed

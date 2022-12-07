@@ -17,7 +17,8 @@ function _M.get_sub_domain()
         return
     end
     --the life time identical to the current request 
-    ngx.ctx.domain = m[0]
+   -- ngx.ctx.domain = m[0]
+    return m[0]
  end
 
 return _M

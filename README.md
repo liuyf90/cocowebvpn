@@ -45,5 +45,6 @@ the cocowebvpn is  one that customer's project.It will servername convert to url
 
 # 2 流程
 ----
-![[https://tva1.sinaimg.cn/large/008vxvgGgy1h8u2u9koggj30h00m0gmw.jpg]]
+
+![流程图](https://tva1.sinaimg.cn/large/008vxvgGgy1h8u2yreacxj30sd0a174z.jpg)
 

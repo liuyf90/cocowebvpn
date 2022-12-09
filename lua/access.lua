@@ -37,24 +37,26 @@ for _,v in ipairs(keys) do
     local json = cjson.decode(v)
     local sub_json=cjson.decode(json)
     local t = sub_json[subdomain]
-    --ngx.log(ngx.ALERT,"*****$sub_json:"..type(sub_json))
-    --ngx.log(ngx.ALERT,"*****$proxy="..t.web)
-    if t then
-           --ngx.var.proxy = 'oa.hrbfu.edu.cn'
-           --proxy_to()
-           --capture domainName form t.web
-           local captures, err =ngx.re.match(t.web,"[^/]+","jo")
-           if captures then
-               local domainName= captures[0]
---               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
-               ngx.var.proxy = domainName
-               proxy_to()
-           else
-               if err then
-                   ngx.log(ngx.ERR, "error: ", err)
-                   return
-               end
-           end           
+    if t ~= nil then
+        --ngx.log(ngx.ALERT,"*****$sub_json:"..type(sub_json))
+        --ngx.log(ngx.ALERT,"*****$proxy="..t.web)
+        if t then
+               --ngx.var.proxy = 'oa.hrbfu.edu.cn'
+               --proxy_to()
+               --capture domainName form t.web
+               local captures, err =ngx.re.match(t.web,"[^/]+","jo")
+               if captures then
+                   local domainName= captures[0]
+    --               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
+                   ngx.var.proxy = domainName
+                   proxy_to()
+               else
+                   if err then
+                       ngx.log(ngx.ERR, "error: ", err)
+                       return
+                   end
+               end           
+        end
     end
 end
 

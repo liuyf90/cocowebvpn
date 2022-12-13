@@ -73,15 +73,21 @@ function _M.rewrite_whole(whole)
            -- no match found (any more)
            break
        end
-
       -- found a match
       --反查外网域名后重写
-      
+       --ngx.log(ngx.ALERT,"*&*&*&*&*&*url="..url[3])
+       local tools = require "lua.lib.mylib"
+       local inner = url[3]
+       local extra = tools.getExtra_shared(inner)
 
-       ngx.log(ngx.ALERT,"*&*&*&*&*&*url="..url[3])
+       if extra ~= nil then
+          local init= require "lua.init_data"
+          whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
+       end
+       
        --ngx.say(url[0])
    end 
-   whole = string.gsub(whole, "my.hrbfu.edu.cn", "my.proxyman.com:8888")
+   --whole = string.gsub(whole, "my.hrbfu.edu.cn", "my.proxyman.com:8888")
    return whole
 end
 

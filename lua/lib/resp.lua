@@ -56,8 +56,8 @@ function _M.rewrite_whole(whole)
     -- local js_code = ...
     -- whole = whole .. js_code
    whole = string.gsub(whole, "max%-width%:1632px%;",  "")
-   --按正则表达式扣出来http(s)的url，然后获得1st子域名，查询内存数据库，反查出外网域名，再替换掉内网域名
-   local urls, err = ngx.re.gmatch(whole, [[(https?)\:\/\/[^\s]*\s]], "i")
+   --按正则表达式扣出来href,http(s)的url，然后获得1st子域名，查询内存数据库，反查出外网域名，再替换掉内网域名
+   local urls, err = ngx.re.gmatch(whole, [[href=\"((https?)\:\/\/([^\/]*)\/.*\")]], "i")
    if not urls then
        ngx.log(ngx.ERR, "error: ", err)
        return
@@ -74,8 +74,11 @@ function _M.rewrite_whole(whole)
            break
        end
 
-       -- found a match
-       ngx.log(ngx.ALERT,"*&*&*&*&*&*url="..url[0])
+      -- found a match
+      --反查外网域名后重写
+      
+
+       ngx.log(ngx.ALERT,"*&*&*&*&*&*url="..url[3])
        --ngx.say(url[0])
    end 
    whole = string.gsub(whole, "my.hrbfu.edu.cn", "my.proxyman.com:8888")

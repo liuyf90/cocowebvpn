@@ -22,7 +22,7 @@ end
 
 
 local keys = ips:get_keys(0)
---ngx.log(ngx.ALERT,"*****keys="..table.concat(keys))
+ngx.log(ngx.ALERT,"*****keys="..table.concat(keys))
 
 local cjson = require "cjson"
 ngx.req.read_body() --will be directly forwarded to the subrequest without copying the whole request body data when creating the subrequest

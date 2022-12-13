@@ -8,9 +8,12 @@
 --]]
 
 local _M={_VERSION = '0.12'}
-function _M.get_sub_domain()
+function _M.get_sub_domain(url)
     local subdomain = "([A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?)"  
-    local m, err = ngx.re.match(ngx.var.host, subdomain, "i")
+    if not url  then
+        url = ngx.var.host
+    end
+    local m, err = ngx.re.match(url, subdomain, "i")
     local ngx_say = ngx.say
     if not m then
         ngx.log(ngx.ERR, "error: ", err)

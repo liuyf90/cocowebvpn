@@ -8,7 +8,7 @@
 
 local resp = require "lua.lib.resp"
 
-ngx.log(ngx.INFO,"replace resp body :")
+--ngx.log(ngx.INFO,"replace resp body :")
 -- body_filter_by_lua, body filter模块，ngx.arg[1]代表输入的chunk，ngx.arg[2]代表当前chunk是否为last
 local chunk, eof = ngx.arg[1], ngx.arg[2]
 -- 定义全局变量，收集全部响应
@@ -27,7 +27,9 @@ if eof then
     -- 获取所有响应数据
     local whole = table.concat(ngx.ctx.buffered)
     -- 进行改写
+    --
     whole= resp.rewrite_whole(whole) 
+    --ngx.log(ngx.ALERT,"whole :"..whole)
     -- 重新赋值响应数据，以修改后的内容作为最终响应
     ngx.arg[1] = whole
 end

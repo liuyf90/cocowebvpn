@@ -12,6 +12,7 @@ local ips = ngx.shared.ips
 local keys = ips:get_keys(0)
 local cjson = require "cjson"
 
+-- return outer url when exist inner value equals web field value in json
 function _M.getExtra_shared(inner)
     for _,v in ipairs(keys) do
           local t = cjson.decode(v)

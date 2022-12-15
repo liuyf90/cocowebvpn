@@ -14,6 +14,13 @@ local cjson = require "cjson"
 
 -- return outer url when exist inner value equals web field value in json
 function _M.getExtra_shared(inner)
+    ------
+    -- ngx.log(ngx.ALERT,"^^^^^^^inner= "..inner)
+    -- local test,err=ngx.re.match(inner,"mail.hrbfu.edu.cn")
+    -- if test then
+    --     ngx.log(ngx.ALERT,"^^^^^^^test= "..inner)
+    -- end
+    --
     for _,v in ipairs(keys) do
           local t = cjson.decode(v)
        -- ngx.log(ngx.ALERT,"^^^^^^^v= "..v.."  inner ="..inner)

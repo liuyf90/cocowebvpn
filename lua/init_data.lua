@@ -9,7 +9,7 @@ local _M = {}
 local data = { 
     casport = 7777, --代理的cas端口号
     domainName = 'proxyman.com:8888', --busi模块的servername
-    cas = "ids.hrbfu.edu.cn" --cas服务的原始地址
+    cas = "ids.hrbfu.edu.cn"
 } 
 function _M.get(name) 
   return data[name] 

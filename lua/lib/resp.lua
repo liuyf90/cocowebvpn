@@ -57,7 +57,9 @@ function _M.rewrite_whole(whole)
     -- whole = whole .. js_code
    whole = string.gsub(whole, "max%-width%:1632px%;",  "")
    --按正则表达式扣出来href,http(s)的url，然后获得1st子域名，查询内存数据库，反查出外网域名，再替换掉内网域名
-   local urls, err = ngx.re.gmatch(whole, [[href=\"((https?)\:\/\/([^\/]*)\/.*\")]], "i")
+   --local urls, err = ngx.re.gmatch(whole, [[href=\"((https?)\:\/\/([^\/]*)\/.*\")]], "i")
+--   local urls, err = ngx.re.gmatch(whole, [[\"((https?)\:\/\/([^\/"]*)[^,\s]*\")]], "i")
+   local urls, err = ngx.re.gmatch(whole, [[[\"\']((https?)\:\/\/([^\/"]*)[^,\s]*[\"\'])]], "i")
    if not urls then
        ngx.log(ngx.ERR, "error: ", err)
        return

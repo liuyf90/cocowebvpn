@@ -59,6 +59,7 @@ function _M.rewrite_whole(whole)
    --按正则表达式扣出来href,http(s)的url，然后获得1st子域名，查询内存数据库，反查出外网域名，再替换掉内网域名
    --local urls, err = ngx.re.gmatch(whole, [[href=\"((https?)\:\/\/([^\/]*)\/.*\")]], "i")
 --   local urls, err = ngx.re.gmatch(whole, [[\"((https?)\:\/\/([^\/"]*)[^,\s]*\")]], "i")
+--   有时返回的响应体中的http是单引号
    local urls, err = ngx.re.gmatch(whole, [[[\"\']((https?)\:\/\/([^\/"]*)[^,\s]*[\"\'])]], "i")
    if not urls then
        ngx.log(ngx.ERR, "error: ", err)
@@ -84,6 +85,10 @@ function _M.rewrite_whole(whole)
 
        if extra ~= nil then
           local init= require "lua.init_data"
+          -- 当响应是json时，端口号前的：需要转译
+          -- 没什么好的办法，因为响应头可能是Content-Type:text，而不是标准的json，那么通过
+          -- 笨方法，校验返回响应的开头为[{，结尾为}],只要符合这个规则，我就认为他是json，替换的域名端口号前的：要加转译符
+          
           whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
        end
        

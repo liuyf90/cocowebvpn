@@ -8,6 +8,7 @@
 
 
 require"cjson".encode(ngx.resp.get_headers())
+ngx.header.content_length = nil 
 --    ngx.header["content-type"]='text/html;charset=UTF-8'
 local resp = require "lua.lib.resp"
 --get 3xx location uri

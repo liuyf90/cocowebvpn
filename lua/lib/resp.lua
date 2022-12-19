@@ -55,7 +55,7 @@ function _M.rewrite_whole(whole)
     -- try to add or replace response body
     -- local js_code = ...
     -- whole = whole .. js_code
-   whole = string.gsub(whole, "max%-width%:1632px%;",  "")
+   whole = ngx.re.gsub(whole, "max%-width%:1632px%;",  "")
    --按正则表达式扣出来href,http(s)的url，然后获得1st子域名，查询内存数据库，反查出外网域名，再替换掉内网域名
    --local urls, err = ngx.re.gmatch(whole, [[href=\"((https?)\:\/\/([^\/]*)\/.*\")]], "i")
 --   local urls, err = ngx.re.gmatch(whole, [[\"((https?)\:\/\/([^\/"]*)[^,\s]*\")]], "i")
@@ -85,7 +85,8 @@ function _M.rewrite_whole(whole)
 
        if extra ~= nil then
           local init= require "lua.init_data"
-          whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
+          --whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
+          local whole = ngx.re.gsub(whole, inner, extra..'.'..init.get("domainName"))
        end
        
        --ngx.say(url[0])

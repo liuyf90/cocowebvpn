@@ -12,7 +12,7 @@ local ips = ngx.shared.ips
 local web="my.webvpn.com"
 
 
-
+--set cookie when success logined    SSO
 local function get_cookie()
     local cookie_value=ngx.var.http_cookie
     local castgc=ngx.var.cookie_CASTGC
@@ -67,8 +67,9 @@ for _,v in ipairs(keys) do
                local captures, err =ngx.re.match(t.web,"[^/]+","jo")
                if captures then
                    local domainName= captures[0]
-    --               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
-                   ngx.var.proxy = domainName
+                   --ngx.log(ngx.ALERT,"*****$domainName="..domainName)
+                   --ngx.var.proxy = domainName
+                   ngx.var.proxy = domainName..":"..t.port
                    proxy_to()
                else
                    if err then

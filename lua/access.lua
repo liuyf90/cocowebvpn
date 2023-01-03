@@ -15,8 +15,10 @@ local web="my.webvpn.com"
 --set cookie when success logined    SSO
 local function get_cookie()
     local castgc=ngx.var.cookie_CASTGC
+
     if castgc ~= nil then
-        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain=proxyman.com;".." Path=/"
+        local data = require "lua.init_data"
+        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain="..data.get("domainName")..";".." Path=/"
     end
 end
 

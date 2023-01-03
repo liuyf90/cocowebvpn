@@ -14,19 +14,23 @@ local web="my.webvpn.com"
 
 --set cookie when success logined    SSO
 local function get_cookie()
-    local cookie_value=ngx.var.http_cookie
+   -- local cookie_value=ngx.var.http_cookie
     local castgc=ngx.var.cookie_CASTGC
-    local cookies = ngx.shared.cookies
-    if  castgc ~= nil then
-        local succ, err, forcible = cookies:set("cookie",cookie_value)
-       -- ngx.log(ngx.ALERT,"###############set_cookies:="..cookie_value)
-    else
-        local value, flags = cookies:get("cookie")
-        --ngx.log(ngx.ALERT,"###############get_cookies:="..value)
-        if value ~=nil then
-            ngx.header['Set-Cookie'] = value.. '; Expires=' .. ngx.cookie_time(ngx.time() + 60 * 30) -- 设置Cookie过期时间为30分钟
-        end
+    if castgc ~= nil then
+        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain=proxyman.com;".." Path=/"
     end
+   -- local castgc=ngx.var.cookie_CASTGC
+   -- local cookies = ngx.shared.cookies
+   -- if  castgc ~= nil then
+   --     local succ, err, forcible = cookies:set("cookie",cookie_value)
+   --    -- ngx.log(ngx.ALERT,"###############set_cookies:="..cookie_value)
+   -- else
+   --     local value, flags = cookies:get("cookie")
+   --     --ngx.log(ngx.ALERT,"###############get_cookies:="..value)
+   --     if value ~=nil then
+   --         ngx.header['Set-Cookie'] = value.. '; Expires=' .. ngx.cookie_time(ngx.time() + 60 * 30) -- 设置Cookie过期时间为30分钟
+   --     end
+   -- end
 
 end
 

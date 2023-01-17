@@ -62,6 +62,8 @@ for _,v in ipairs(keys) do
                    --ngx.log(ngx.ALERT,"*****$domainName="..domainName)
                    --ngx.var.proxy = domainName
                    ngx.var.proxy = domainName..":"..t.port
+                   --update scheme 
+                   ngx.var.cscheme= t.scheme
                    proxy_to()
                else
                    if err then

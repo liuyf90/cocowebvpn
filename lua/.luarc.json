@@ -1,0 +1,12 @@
+{
+    "runtime.version": "LuaJIT",
+    "diagnostics.globals": [
+        "ngx"
+    ],
+    "workspace.library": [
+        "${3rd}/OpenResty/library"
+    ],
+    "diagnostics.disable": [
+        "unused-local"
+    ]
+}

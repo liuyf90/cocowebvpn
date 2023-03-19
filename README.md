@@ -47,4 +47,221 @@ the cocowebvpn is  one that customer's project.It will servername convert to url
 ----
 
 ![流程图](https://tva1.sinaimg.cn/large/008vxvgGgy1h8u2yreacxj30sd0a174z.jpg)
+# 谷兰科技WEBVPN安装说明
+
+## 后端代理安装说明
+
+后端代理是webvpn的代理逻辑核心部分，是将外部请求按照配置规则进行路由的系统。
+
+###依赖系统
+
+	* redis数据库
+	* openresty代理
+	* centos7或Ubuntu
+	
+###安装过程
+
+
+#### 1. redis数据库安装：（centos）
+	
+
+1. 安装gcc依赖，执行命令 `yum install -y gcc`
+2. 下载并解压Redis安装包，执行命令 `wget http://download.redis.io/releases/redis-5.0.3.tar.gz` 和 `tar -zxvf redis-5.0.3.tar.gz`
+3. 切换到Redis解压目录下，执行编译，执行命令 `cd redis-5.0.3` 和 `make`
+4. 安装并指定安装目录，执行命令 `make install PREFIX=/usr/local/redis`
+5. 启动服务，可以选择前台启动或后台启动。前台启动执行命令 `cd /usr/local/redis/bin` 和 `./redis-server`；后台启动需要修改配置文件，在 `/usr/local/redis/bin` 目录下执行命令 `cp redis.conf /etc/redis.conf` ，然后编辑 `/etc/redis.conf` 文件，将 `daemonize no` 改为 `daemonize yes` ，保存退出后，在 `/usr/local/redis/bin` 目录下执行命令 `./redis-server /etc/redis.conf`
+6. 设置密码，编辑 `/etc/redis.conf` 文件，找到 `#requirepass foobared` 这一行，去掉前面的注释符号，并将 foobared 改为自己的密码。保存退出后，在 `/usr/local/redis/bin` 目录下执行命令 `./redis-cli shutdown`
+7. 重启服务，在 `/usr/local/redis/bin` 目录下执行命令 `./redis-server /etc/redis.conf`
+8. 验证密码，在 `/usr/local/redis/bin` 目录下执行命令 `./redis-cli -a 密码`
+
+#### 2.openresty的安装：（centos）
+
+1. 添加Openresty仓库，执行命令 `sudo yum install yum-utils` 和 `sudo yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo`
+2. 安装Openresty，执行命令 `sudo yum install openresty`
+3. 启动Openresty，执行命令 `sudo /usr/local/openresty/nginx/sbin/nginx`
+4. 验证Openresty是否运行成功，访问 http://127.0.0.1:80/ ，如果看到欢迎页面，则说明安装成功
+
+###webvpn配置
+
+1. 在home目录下，新建cocoWebvpn 目录
+
+1. 将全部文件copy到目录下，目录结构如下图
+
+	```
+  |- conf.d
+  |	\- proxy.conf
+  |	\- proxy2.conf
+  |	|- appcert
+  |	|	\- global.certificate.cet
+  |	|	\- global.certificate.key
+  |	|- webcert
+  |	|	\- local.private.crt
+  |	|	\- local.private.key
+  |	|-webcert
+  |- logs
+  |	\- access.log
+  |	\- error.log
+  |	\- info.log
+  |	\- nginx.log
+  |	\- proxy_access.log
+  |	\- rewritre_error.log
+  |	\- upstream_access.log
+  |- lua
+  |	\- access.lua
+  |	\- init.lua
+  |	\- init_data.lua
+  |	\- replace.lua
+  |	\- resp_header_filter.lua
+  |	|-lib	
+  |	|	\- decode_info.lua
+  |	|	\- domain.lua
+  |	|	\- get_random_string.lua
+  |	|	\- mylib.lua
+  |	|	\- req.lua
+  |	|	\- resp.lua
+  \- nginx.conf
+```
+
+1. 主要涉及到配置如下：
+
+ 	1. 配置dns域名服务器
+ 	
+ 	 * 在/nginx.conf和/conf.d/proxy.nginx配置文件里，所有resolver 配置项需要指向dns域名解析服务器地址:
+ 	     
+	 ```nginx
+ 	    	resolver 172.16.17.23; #请按实际地址填写
+ 	    	
+ 	  ```
+ 	
+	1. 配置webvpn后台程序的ssl证书
+	
+		在/nginx.conf配置文件中找到注释
+ 		
+ 		```nginx
+ 		 #proxy webvpn entrance (apps list.html)
+ 		```
+ 		
+ 		   在下面的server块中找到下面两行，如果要替换谷兰webvpn后台管理的ssl证书，请根据实际情况修改如下两行配置。
+ 		
+ 		```
+ 		11          ssl_certificate     conf.d/webcert/local.private.crt;
+ 		 
+ 		12          ssl_certificate_key conf.d/webcert/local.private.key;
+ 		```
+ 	1. 配置代理应用的ssl证书
+ 		
+ 		在/conf.d/proxy.conf文件中找到如下注释
+ 		
+ 		```nginx
+ 			  #配置appbvpn证书
+ 		```
+ 		在下面的代码行中，修改如下两行代码配置，指定替换的代理应用的ssl证书位置
+ 		
+ 		```nginx
+ 			  ssl_certificate     conf.d/appcert/global.certificate.crt;
+  			  ssl_certificate_key conf.d/appcert/global.certificate.key;
+ 		```
+
+	1. 指定webvpn后台管理程序的代理地址
+	
+		在/nginx.conf配置文件中找到注释
+ 		
+ 		```nginx
+ 		 #proxy webvpn entrance (apps list.html)
+ 		```
+ 		在下面的代码块中找到
+ 		
+ 		```
+ 		  location / {
+              proxy_pass http://localhost:8088;
+           }
+ 		```
+ 		修改proxy_pass的内容为webvpn后台管理程序的地址：端口即可。
+ 		
+ 	1. 指定cas服务器地址
+ 	
+ 		在nginx.conf文件中找到注释
+ 		
+ 		```
+ 		  #proxy cas server path
+ 		```
+ 		在配置块中找到如下配置
+ 		
+ 		```
+ 		 set $backend_servers ids.hrbfu.edu.cn;
+ 		```
+ 		
+ 		将$backend_servers地址改为生产环境的cas服务器域名
+ 		
+ 		在/lua/init_data.lua文件中，找到如下配置
+ 		
+ 	 	```
+ 	 	  cas = "ids.hrbfu.edu.cn"
+ 	 	```
+ 	 	将cas变量的值改为同上$backend_servers变量的值即可
+ 		
+ 	2. 代理cas服务器的端口号设置
+ 		
+ 	 默认为7777端口，如修改，请在lua/init_data.lua文件中，找到如下配置进行修改
+ 	 
+ 	 ```
+ 	       casport = 7777, --代理的cas端口号
+ 	 ```
+ 	 在nginx.conf文件中，找到如下配置，同步修改
+ 	 
+ 	 ```
+ 	     #proxy cas server path
+      		 server{
+          		 listen 7777;
+ 	 ```
+ 	 
+	1. 代理域名设置
+	
+		请在lua/init_data.lua文件中，找到如下配置进行修改
+		
+		```
+		       domainName = 'webvpn2.hrbfu.edu.cn', --busi模块的servername
+		
+		```
+		然后在nginx.conf和/conf.d/proxy.nginx配置文件中，替换全部 server_name配置的值
+		
+	     ```
+	      server_name *.webvpn2.hrbfu.edu.cn;
+	     ```
+	     注意保留原配置中的*号不要删除。
+	     
+		
+	2. 	redis配置
+		
+		在lua/init.lua文件中进行配置，主要涉及如下几行
+		
+		```
+		  local ok, err = red:connect("127.0.0.1",6379) #redis服务的ip地址及端口
+		  local res, err = red:auth("GoodLan@123") #redis服务的密码
+		   22     ngx.timer.at(5, update_ips)  #刷新redis的频率，默认5秒，下面同步修改
+		   26     ngx.timer.at(5, update_ips）#刷新redis的频率，默认5秒，上面同步修改
+		```
+		
+	
+###webvpn的运行
+
+进入/home/cocowebvpn 目录，在目录下执行
+
+```shell
+➜   openresty -p . -c ./nginx.conf 
+```
+
+如果要重启服务，同样进入/home/cocowebvpn 目录，在目录下执行
+
+```shell
+➜   openresty -p . -c ./nginx.conf -s reload
+```
+
+日志文件在/home/cocowebvpn/logs下，日常记录在info.log中
+
+
+
+
+
+
 

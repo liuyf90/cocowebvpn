@@ -15,7 +15,6 @@ local cjson = require "cjson"
 -- return outer url when exist inner value equals web field value in json
 function _M.getExtra_shared(inner)
     ------
-<<<<<<< HEAD
   --   ngx.log(ngx.ALERT,"^^^^^^^inner= "..inner)
   --   local test,err=ngx.re.match(inner,"mail.hrbfu.edu.cn")
   --   if test then
@@ -30,30 +29,11 @@ function _M.getExtra_shared(inner)
         local m, err = ngx.re.match(t, inner)
         if m then 
         --    ngx.log(ngx.ALERT,"^^^^^^^&&&&&&&%%%%%%%%%%m="..m[0])
-=======
-    -- ngx.log(ngx.ALERT,"^^^^^^^inner= "..inner)
-    -- local test,err=ngx.re.match(inner,"mail.hrbfu.edu.cn")
-    -- if test then
-    --     ngx.log(ngx.ALERT,"^^^^^^^test= "..inner)
-    -- end
-    --
-    for _,v in ipairs(keys) do
-          local t = cjson.decode(v)
-       -- ngx.log(ngx.ALERT,"^^^^^^^v= "..v.."  inner ="..inner)
-        --判断是否包含inner，按字符串判断就行，这样少好多循环
-        local m, err = ngx.re.match(t, inner)
-        if m then 
-            --ngx.log(ngx.ALERT,"^^^^^^^&&&&&&&%%%%%%%%%%m="..m[0])
->>>>>>> a542e94bf21249f2112f7525465ff1025f2c6250
             --m 确认了存在inner
             --用正则表达式扣出来key值（因为table不会处理）
             local cap,err = ngx.re.match(t,[[^{"(.*?)"]])
             if cap ~=nil then
-<<<<<<< HEAD
          --     ngx.log(ngx.ALERT,"^^^^^^^cap[1]="..cap[1])
-=======
-              --ngx.log(ngx.ALERT,"^^^^^^^cap[1]="..cap[1])
->>>>>>> a542e94bf21249f2112f7525465ff1025f2c6250
               return cap[1] --return extra url 
             end
         end

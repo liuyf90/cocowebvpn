@@ -11,7 +11,6 @@ local ips = ngx.shared.ips
 --local ip = ngx.var.remote_addr
 local web="my.webvpn.com"
 
-<<<<<<< HEAD
     --set cookie when success logined    SSO
 local function get_cookie()
     local castgc=ngx.var.cookie_CASTGC
@@ -39,21 +38,6 @@ end
 local function proxy_to()
     --get_cookie()
     is_referer()
-=======
-
---set cookie when success logined    SSO
-local function get_cookie()
-    local castgc=ngx.var.cookie_CASTGC
-
-    if castgc ~= nil then
-        local data = require "lua.init_data"
-        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain="..data.get("domainName")..";".." Path=/"
-    end
-end
-
-local function proxy_to()
-    get_cookie()
->>>>>>> a542e94bf21249f2112f7525465ff1025f2c6250
     local req = require "lua.lib.req"
     req.set_req_headers()
     ngx.exec('@download_server')    
@@ -61,11 +45,6 @@ local function proxy_to()
 end
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a542e94bf21249f2112f7525465ff1025f2c6250
 local keys = ips:get_keys(0)
 --ngx.log(ngx.ALERT,"*****keys="..table.concat(keys))
 
@@ -92,17 +71,11 @@ for _,v in ipairs(keys) do
                local captures, err =ngx.re.match(t.web,"[^/]+","jo")
                if captures then
                    local domainName= captures[0]
-<<<<<<< HEAD
     --               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
                    --ngx.var.proxy = domainName
                    ngx.var.proxy = domainName..":"..t.port
                    --update scheme 
                    ngx.var.cscheme= t.scheme
-=======
-                   --ngx.log(ngx.ALERT,"*****$domainName="..domainName)
-                   --ngx.var.proxy = domainName
-                   ngx.var.proxy = domainName..":"..t.port
->>>>>>> a542e94bf21249f2112f7525465ff1025f2c6250
                    proxy_to()
                else
                    if err then

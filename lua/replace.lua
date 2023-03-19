@@ -7,7 +7,6 @@
 
 
 local resp = require "lua.lib.resp"
-
 --ngx.log(ngx.INFO,"replace resp body :")
 -- body_filter_by_lua, body filter模块，ngx.arg[1]代表输入的chunk，ngx.arg[2]代表当前chunk是否为last
 local chunk, eof = ngx.arg[1], ngx.arg[2]

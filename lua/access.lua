@@ -11,19 +11,33 @@ local ips = ngx.shared.ips
 --local ip = ngx.var.remote_addr
 local web="my.webvpn.com"
 
-
---set cookie when success logined    SSO
+    --set cookie when success logined    SSO
 local function get_cookie()
     local castgc=ngx.var.cookie_CASTGC
 
     if castgc ~= nil then
         local data = require "lua.init_data"
-        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain="..data.get("domainName")..";".." Path=/"
+        ngx.header['Set-Cookie'] = 'CASTGC='..castgc..';'.." Domain="..data.get("domainName")..";".." Expires="..ngx.cookie_time(ngx.time()+300)..";".." Path=/"
+    --else
+    --    ngx.redirect("http://webvpn2.hrbfu.edu.cn", 301)
     end
+
+   -- local flag = ngx.var.cookie_flag
+   --     if flag == nil  then
+   --     --ngx.log(ngx.ALERT,"*****flagnew="..flag)
+   -- end
+end
+
+local function is_referer()
+  local headers = ngx.req.get_headers()
+  if not headers["Referer"] then
+    ngx.exit(403)   
+  end
 end
 
 local function proxy_to()
-    --get_cookie() 因为在门户已经执行过了，此处多余
+    --get_cookie()
+    is_referer()
     local req = require "lua.lib.req"
     req.set_req_headers()
     ngx.exec('@download_server')    
@@ -57,7 +71,7 @@ for _,v in ipairs(keys) do
                local captures, err =ngx.re.match(t.web,"[^/]+","jo")
                if captures then
                    local domainName= captures[0]
-                   --ngx.log(ngx.ALERT,"*****$domainName="..domainName)
+    --               ngx.log(ngx.ALERT,"*****$domainName="..domainName)
                    --ngx.var.proxy = domainName
                    ngx.var.proxy = domainName..":"..t.port
                    --update scheme 

@@ -85,7 +85,9 @@ function _M.rewrite_whole(whole)
 
        if extra ~= nil then
           local init= require "lua.init_data"
-          whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
+          --whole = string.gsub(whole, inner, extra..'.'..init.get("domainName"))
+          --use ngx.re.gsub
+          whole = ngx.re.gsub(whole, inner, extra..'.'..init.get("domainName"))
        end
        
        --ngx.say(url[0])

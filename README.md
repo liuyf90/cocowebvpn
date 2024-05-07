@@ -47,7 +47,7 @@ the cocowebvpn is  one that customer's project.It will servername convert to url
 ----
 
 ![流程图](https://tva1.sinaimg.cn/large/008vxvgGgy1h8u2yreacxj30sd0a174z.jpg)
-# 谷兰科技WEBVPN安装说明
+# WEBVPN安装说明
 
 ## 后端代理安装说明
 
@@ -141,7 +141,7 @@ the cocowebvpn is  one that customer's project.It will servername convert to url
  		 #proxy webvpn entrance (apps list.html)
  		```
  		
- 		   在下面的server块中找到下面两行，如果要替换谷兰webvpn后台管理的ssl证书，请根据实际情况修改如下两行配置。
+ 		   在下面的server块中找到下面两行，如果要替换webvpn后台管理的ssl证书，请根据实际情况修改如下两行配置。
  		
  		```
  		11          ssl_certificate     conf.d/webcert/local.private.crt;

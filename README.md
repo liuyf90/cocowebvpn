@@ -129,7 +129,7 @@ the cocowebvpn is  one that customer's project.It will servername convert to url
  	 * 在/nginx.conf和/conf.d/proxy.nginx配置文件里，所有resolver 配置项需要指向dns域名解析服务器地址:
  	     
 	 ```nginx
- 	    	resolver 172.16.17.23; #请按实际地址填写
+ 	    	resolver xxx.xxx.xxxx.xxx; #请按实际地址填写
  	    	
  	  ```
  	

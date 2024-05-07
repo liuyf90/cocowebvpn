@@ -56,7 +56,7 @@ local domain = require "lua.lib.domain"
 local subdomain = domain.get_sub_domain()
 
 
--- sub_json's  data like "sadd ips:url '{"oa":{"url":"10.49.2.5","port":"8080","web":"oa.web.com"}}'"
+-- sub_json's  data like "sadd ips:url '{"oa":{"url":"xxx.xxxx.xxxx.xxxx","port":"8080","web":"oa.web.com"}}'"
 for _,v in ipairs(keys) do
     local json = cjson.decode(v)
     local sub_json=cjson.decode(json)
